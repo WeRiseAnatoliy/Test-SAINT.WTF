@@ -363,19 +363,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5937829535667841593, guid: 32f4761669c2bdc4db82078ba7acb083, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.13052888
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5937829535667841593, guid: 32f4761669c2bdc4db82078ba7acb083, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5937829535667841593, guid: 32f4761669c2bdc4db82078ba7acb083, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9914446
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5937829535667841593, guid: 32f4761669c2bdc4db82078ba7acb083, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5937829535667841593, guid: 32f4761669c2bdc4db82078ba7acb083, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -383,7 +383,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5937829535667841593, guid: 32f4761669c2bdc4db82078ba7acb083, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 165
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5937829535667841593, guid: 32f4761669c2bdc4db82078ba7acb083, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -480,13 +480,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.033783264, y: -0.957662, z: 0.25660428, w: 0.12608115}
-  m_LocalPosition: {x: -0.97, y: 4, z: 8.78}
+  m_LocalRotation: {x: 0.33357882, y: -0, z: -0, w: 0.94272226}
+  m_LocalPosition: {x: -1.66, y: 4.83, z: 1.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 30, y: -165, z: 0}
+  m_LocalEulerAnglesHint: {x: 38.972, y: 0, z: 0}
 --- !u!1818360608 &963194229
 PositionConstraint:
   m_ObjectHideFlags: 0
@@ -497,8 +497,8 @@ PositionConstraint:
   m_Enabled: 1
   serializedVersion: 2
   m_Weight: 1
-  m_TranslationAtRest: {x: -0.97, y: 4, z: 8.78}
-  m_TranslationOffset: {x: 0.78, y: 4, z: 3.5699997}
+  m_TranslationAtRest: {x: -1.66, y: 4.83, z: 1.49}
+  m_TranslationOffset: {x: 0.09000003, y: 4.83, z: -3.72}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
