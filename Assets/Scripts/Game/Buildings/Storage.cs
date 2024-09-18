@@ -28,6 +28,9 @@ namespace TestTask.Buildings
 
         public string[] Items => container.ToArray();
 
+        public System.Action<GameObject> OnPlayerEnter;
+        public System.Action<GameObject> OnPlayerExit;
+
         private void Start()
         {
             itemDatabase = ItemDatabase.GetDefault; //can be replaced with di
