@@ -16,6 +16,7 @@ namespace TestTask.Buildings
         [SerializeField, FoldoutGroup("Items")] bool center = true;
 
         public int MaxItemsCount = 5;
+        public bool IsOutput;
 
         public TransferData CurrentTransfer;
         public bool IsFull =>
@@ -37,11 +38,17 @@ namespace TestTask.Buildings
             HandleTransferData();
         }
 
-        public void AddItem (string itemId)
+        public void AddItem(string itemId)
+        {
+            var prefab = itemDatabase[itemId].Prefab;
+            var instance = Instantiate(prefab, parentOfItems);
+            AddItemWithInstance(itemId, instance);
+        }
+
+        public void AddItemWithInstance (string itemId, GameObject item)
         {
             container.Add(itemId);
-            var prefab = itemDatabase[itemId].Prefab;
-            Instantiate(prefab, parentOfItems);
+            item.transform.parent = parentOfItems;
             RecalculateItemsPosition();
         }
 
@@ -68,7 +75,6 @@ namespace TestTask.Buildings
         public void RemoveItem (int idx)
         {
             container.RemoveAt(idx);
-
         }
 
         public void RecalculateItemsPosition ()
@@ -82,18 +88,15 @@ namespace TestTask.Buildings
 
         public Vector3 CalculateChildPosition(int index)
         {
-            // Обчислюємо координати у сітці
-            int x = index % itemsGridSize.x;
-            int z = index / itemsGridSize.z;  // Використовуємо лише 2D сітку (x, z), оскільки y = 0
+            var x = index % itemsGridSize.x;
+            var z = index / itemsGridSize.z;
 
-            // Обчислюємо позицію для кожної дитини на основі офсету
-            Vector3 position = new Vector3(x * itemsOffset.x, itemsOffset.y, z * itemsOffset.z);
+            var position = new Vector3(x * itemsOffset.x, itemsOffset.y, z * itemsOffset.z);
 
-            // Центруємо сітку, якщо необхідно
             if (center)
             {
-                Vector3 totalSize = new Vector3((itemsGridSize.x - 1) * itemsOffset.x, 0, (itemsGridSize.z - 1) * itemsOffset.z);
-                position -= totalSize * 0.5f; // Віднімаємо половину розміру, щоб центр був в нульовій точці
+                var totalSize = new Vector3((itemsGridSize.x - 1) * itemsOffset.x, 0, (itemsGridSize.z - 1) * itemsOffset.z);
+                position -= totalSize * 0.5f;
             }
 
             return position;
@@ -102,11 +105,16 @@ namespace TestTask.Buildings
         #region Transfer
         public void RequestTransfer (Storage otherStorage, GameObject item, float delay)
         {
-            CurrentTransfer = new TransferData(otherStorage, delay);
+            CurrentTransfer = new TransferData(this, otherStorage, delay, item);
+            if(item)
+                item.transform.parent = null;
         }
 
         public void CancelTransfer ()
         {
+            if (CurrentTransfer.Object)
+                CurrentTransfer.Object.transform.parent = CurrentTransfer.From.transform;
+
             CurrentTransfer = null;
         }
 
@@ -119,6 +127,10 @@ namespace TestTask.Buildings
                     ApplyTransfer();
                     CurrentTransfer = null;
                 }
+                else
+                {
+                    CurrentTransfer.UpdateObjectPositionByPercent();
+                }
             }
         }
 
@@ -129,16 +141,41 @@ namespace TestTask.Buildings
         }
         #endregion
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if(other.CompareTag("Player"))
+            {
+                if(IsOutput && container.Count > 0)
+                {
+                    RequestTransfer(other.GetComponent<Storage>(),
+                        parentOfItems.GetChild(0).gameObject, 
+                        itemDatabase[container[0]].UploadTime);
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            
+        }
+
         public class TransferData
         {
+            public Storage From;
             public Storage Target;
+            public GameObject Object;
             public float Delay;
 
-            public TransferData(Storage target, float delay)
+            public TransferData(Storage from,
+                Storage target,
+                float delay,
+                GameObject gameObject)
             {
                 TransferTick = Time.time;
+                From = from;
                 Target = target;
                 Delay = delay;
+                Object = gameObject;
             }
 
             public float TransferTick { get; private set; }
@@ -151,6 +188,12 @@ namespace TestTask.Buildings
 
             public bool IsDone =>
                 TransferTime >= Delay;
+
+            public void UpdateObjectPositionByPercent ()
+            {
+                if(Object)
+                    Object.transform.position = Vector3.Lerp(From.parentOfItems.position, Target.parentOfItems.position, Percent);
+            }
         }
     }
 }

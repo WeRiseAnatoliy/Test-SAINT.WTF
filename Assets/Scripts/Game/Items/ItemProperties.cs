@@ -8,5 +8,8 @@ namespace TestTask.Items
         public string ID;
         public string Title;
         public GameObject Prefab;
+
+        [Range(0f, 5f)]
+        public float UploadTime = 1;
     }
 }
