@@ -7,8 +7,8 @@ namespace TestTask.Characters
     {
         private CharacterController controller;
 
-        public float SpeedMove = 1f;
-        public float RotationDegressDelta = 0.5f;
+        public float SpeedMove = 5f;
+        public float RotationDegressDelta = 250f;
 
         private void Start()
         {
