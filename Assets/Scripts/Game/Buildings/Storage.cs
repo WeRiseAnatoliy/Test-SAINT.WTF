@@ -1,6 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
+using TestTask.Game;
 using TestTask.Items;
 using TestTask.Triggers;
 using UnityEngine;
@@ -42,8 +43,11 @@ namespace TestTask.Buildings
         #region Add, remove, contains
         public void AddItem(string itemId)
         {
+            var building = transform.GetComponentInParent<Building>();
             var prefab = itemDatabase[itemId].Prefab;
-            var instance = Instantiate(prefab, parentOfItems);
+            var instance = Instantiate(prefab, building ? building.transform.position : transform.position, Quaternion.identity);
+            var linear = instance.AddComponent<LinearMover>();
+            linear.SetTargetPos(CalculateChildPosition(Items.Length), ItemsParent);
             AddItemWithInstance(itemId, instance);
         }
 
@@ -51,7 +55,7 @@ namespace TestTask.Buildings
         {
             container.Add(new ItemMemoryData(itemId, item));
             item.transform.parent = parentOfItems;
-            RecalculateItemsPosition();
+            //RecalculateItemsPosition();
         }
 
         public bool ContainsAnyItem(params string[] itemIds) =>
@@ -135,9 +139,6 @@ namespace TestTask.Buildings
 
         public void CancelTransfer ()
         {
-            if (CurrentTransfer != null)
-                CurrentTransfer.From.Items[CurrentTransfer.ItemIndex].ItemObject.transform.parent = CurrentTransfer.From.ItemsParent;
-
             CurrentTransfer = null;
         }
 
@@ -147,13 +148,8 @@ namespace TestTask.Buildings
             {
                 if(CurrentTransfer.IsDone)
                 {
-                    CurrentTransfer.UpdateObjectPositionByPercent(CurrentTransfer.From.Items[CurrentTransfer.ItemIndex].ItemObject);
                     ApplyTransfer();
                     CurrentTransfer = null;
-                }
-                else
-                {
-                    //CurrentTransfer.UpdateObjectPositionByPercent();
                 }
             }
         }
@@ -163,7 +159,12 @@ namespace TestTask.Buildings
             var itemData = CurrentTransfer.From.container[CurrentTransfer.ItemIndex];
             CurrentTransfer.Target.AddItemWithInstance(itemData.ItemId, itemData.ItemObject);
             CurrentTransfer.From.container.RemoveAt(CurrentTransfer.ItemIndex);
-            RecalculateItemsPosition();
+
+            if (itemData.ItemObject.TryGetComponent<LinearMover>(out var mover))
+            {
+                var pos = CurrentTransfer.Target.CalculateChildPosition(CurrentTransfer.Target.Items.Length);
+                mover.SetTargetPos(pos, CurrentTransfer.Target.ItemsParent);
+            }
         }
         #endregion
 
@@ -208,6 +209,7 @@ namespace TestTask.Buildings
         {
             public string ItemId;
             public GameObject ItemObject;
+            public LinearMover Mover => ItemObject.GetComponent<LinearMover>();
 
             public ItemMemoryData(string itemId, GameObject itemObject)
             {
