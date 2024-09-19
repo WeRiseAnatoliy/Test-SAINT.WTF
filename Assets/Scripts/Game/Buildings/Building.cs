@@ -17,6 +17,11 @@ namespace TestTask.Buildings
         protected virtual void Start ()
         {
             items = ItemDatabase.GetDefault;
+
+            if (InputStorage)
+                InputStorage.InteractTrigger.OnLost += OnInteractTriggerExit;
+            if (OutputStorage)
+                OutputStorage.InteractTrigger.OnLost += OnInteractTriggerExit;
         }
 
         protected virtual void Update ()
@@ -24,9 +29,15 @@ namespace TestTask.Buildings
             HandlePlayerTrigger();
         }
 
+        private void OnInteractTriggerExit (GameObject player)
+        {
+            InputStorage?.CancelTransfer();
+            OutputStorage?.CancelTransfer();
+        }
+
         private void HandlePlayerTrigger()
         {
-            if(InputStorage &&
+            if (InputStorage &&
                 InputStorage.CurrentTransfer == null &&
                 InputStorage.InteractTrigger.Memory.Count > 0)
             {
@@ -57,8 +68,8 @@ namespace TestTask.Buildings
                 if (playerStorage.ContainsItem(InputItems[x], out var arrayIdx))
                 {
                     playerStorage.RequestTransfer(InputStorage,
-                        playerStorage.ItemsParent.GetChild(arrayIdx).gameObject,
-                        items[playerStorage.Items[arrayIdx]].UploadTime);
+                       playerStorage.Items[arrayIdx].ItemObject,
+                       items[playerStorage.Items[arrayIdx].ItemId].UploadTime);
 
                     lastGettedItemId++;
                     if (lastGettedItemId >= InputItems.Length)
@@ -79,7 +90,7 @@ namespace TestTask.Buildings
 
             OutputStorage.RequestTransfer(playerStorage,
                 OutputStorage.ItemsParent.GetChild(itemIdx).gameObject,
-                items[OutputStorage.Items[itemIdx]].UploadTime);
+                items[OutputStorage.Items[itemIdx].ItemId].UploadTime);
         }
     }
 }

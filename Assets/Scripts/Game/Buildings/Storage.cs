@@ -24,11 +24,10 @@ namespace TestTask.Buildings
 
         private ItemDatabase itemDatabase;
         [ShowInInspector, ReadOnly, FoldoutGroup("Debug")]
-        private List<string> container = new List<string>();
+        private List<ItemMemoryData> container = new List<ItemMemoryData>();
 
-        public string[] Items => container.ToArray();
+        public ItemMemoryData[] Items => container.ToArray();
         public Transform ItemsParent => parentOfItems;
-
 
         private void Start()
         {
@@ -50,7 +49,7 @@ namespace TestTask.Buildings
 
         public void AddItemWithInstance (string itemId, GameObject item)
         {
-            container.Add(itemId);
+            container.Add(new ItemMemoryData(itemId, item));
             item.transform.parent = parentOfItems;
             RecalculateItemsPosition();
         }
@@ -91,7 +90,7 @@ namespace TestTask.Buildings
                 if (exclude.Contains(x))
                     continue;
 
-                if (container[x] == itemId)
+                if (container[x].ItemId == itemId)
                 {
                     arrayIdx = x;
                     return true;
@@ -132,14 +131,12 @@ namespace TestTask.Buildings
         public void RequestTransfer (Storage otherStorage, GameObject item, float delay)
         {
             CurrentTransfer = new TransferData(this, otherStorage, delay, item);
-            if(item)
-                item.transform.parent = null;
         }
 
         public void CancelTransfer ()
         {
-            if (CurrentTransfer.Object)
-                CurrentTransfer.Object.transform.parent = CurrentTransfer.From.transform;
+            if (CurrentTransfer != null && CurrentTransfer.Object)
+                CurrentTransfer.Object.transform.parent = CurrentTransfer.From.ItemsParent;
 
             CurrentTransfer = null;
         }
@@ -163,8 +160,9 @@ namespace TestTask.Buildings
 
         private void ApplyTransfer ()
         {
-            CurrentTransfer.Target.AddItemWithInstance(container[0], CurrentTransfer.Object);
+            CurrentTransfer.Target.AddItemWithInstance(container[0].ItemId, CurrentTransfer.Object);
             container.RemoveAt(0);
+            RecalculateItemsPosition();
         }
         #endregion
 
@@ -202,6 +200,18 @@ namespace TestTask.Buildings
             {
                 if(Object)
                     Object.transform.position = Vector3.Lerp(From.parentOfItems.position, Target.ItemsParent.position + Target.CalculateChildPosition(Target.Items.Length), Percent);
+            }
+        }
+
+        public struct ItemMemoryData
+        {
+            public string ItemId;
+            public GameObject ItemObject;
+
+            public ItemMemoryData(string itemId, GameObject itemObject)
+            {
+                ItemId = itemId;
+                ItemObject = itemObject;
             }
         }
     }

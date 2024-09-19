@@ -35,6 +35,7 @@ namespace TestTask.Buildings
             foreach (var item in Factory.InputItems)
             {
                 Factory.InputStorage.ContainsItem(item, out var arrayIdx);
+                Object.Destroy(Factory.InputStorage.Items[arrayIdx].ItemObject);
                 Factory.InputStorage.RemoveItem(arrayIdx);
             }
         }
