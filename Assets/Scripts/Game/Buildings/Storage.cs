@@ -111,10 +111,9 @@ namespace TestTask.Buildings
 
         public void RecalculateItemsPosition ()
         {
-            for(var x = 0; x < parentOfItems.childCount; x++)
+            for(var x = 0; x < container.Count; x++)
             {
-                parentOfItems.GetChild(x).transform.localPosition = CalculateChildPosition(x);
-                parentOfItems.GetChild(x).transform.localRotation = Quaternion.identity;
+                container[x].Mover.SetTargetPos(CalculateChildPosition(x), ItemsParent);
             }
         }
 
@@ -160,11 +159,14 @@ namespace TestTask.Buildings
             CurrentTransfer.Target.AddItemWithInstance(itemData.ItemId, itemData.ItemObject);
             CurrentTransfer.From.container.RemoveAt(CurrentTransfer.ItemIndex);
 
-            if (itemData.ItemObject.TryGetComponent<LinearMover>(out var mover))
-            {
-                var pos = CurrentTransfer.Target.CalculateChildPosition(CurrentTransfer.Target.Items.Length);
-                mover.SetTargetPos(pos, CurrentTransfer.Target.ItemsParent);
-            }
+            CurrentTransfer.Target?.RecalculateItemsPosition();
+            CurrentTransfer.From?.RecalculateItemsPosition();
+
+            //if (itemData.ItemObject.TryGetComponent<LinearMover>(out var mover))
+            //{
+            //    var pos = CurrentTransfer.Target.CalculateChildPosition(CurrentTransfer.Target.Items.Length);
+            //    mover.SetTargetPos(pos, CurrentTransfer.Target.ItemsParent);
+            //}
         }
         #endregion
 

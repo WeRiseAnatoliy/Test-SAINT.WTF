@@ -38,6 +38,7 @@ namespace TestTask.Buildings
                 Factory.InputStorage.Items[arrayIdx].Mover.SetTargetPos(Vector3.zero, Factory.transform);
                 Object.Destroy(Factory.InputStorage.Items[arrayIdx].ItemObject, 5f);
                 Factory.InputStorage.RemoveItem(arrayIdx);
+                Factory.InputStorage.RecalculateItemsPosition();
             }
         }
 
