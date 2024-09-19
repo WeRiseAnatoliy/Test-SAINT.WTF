@@ -51,7 +51,7 @@ MonoBehaviour:
   InputItems: []
   OutputItem: Item 01
   ProductionRate:
-    RealValue: 2
+    RealValue: 4
   CurrentState: 0
 --- !u!1001 &13916020613099656
 PrefabInstance:

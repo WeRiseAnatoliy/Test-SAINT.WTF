@@ -85,7 +85,7 @@ namespace TestTask.Buildings
         public bool ContainsItem (string itemId, out int arrayIdx, params int[] exclude)
         {
             arrayIdx = -1;
-            for(var x = 0; x < container.Count; x++)
+            for (var x = container.Count - 1; x >= 0; x--)
             {
                 if (exclude.Contains(x))
                     continue;
@@ -128,15 +128,15 @@ namespace TestTask.Buildings
         }
 
         #region Transfer
-        public void RequestTransfer (Storage otherStorage, GameObject item, float delay)
+        public void RequestTransfer (Storage otherStorage, int item, float delay)
         {
             CurrentTransfer = new TransferData(this, otherStorage, delay, item);
         }
 
         public void CancelTransfer ()
         {
-            if (CurrentTransfer != null && CurrentTransfer.Object)
-                CurrentTransfer.Object.transform.parent = CurrentTransfer.From.ItemsParent;
+            if (CurrentTransfer != null)
+                CurrentTransfer.From.Items[CurrentTransfer.ItemIndex].ItemObject.transform.parent = CurrentTransfer.From.ItemsParent;
 
             CurrentTransfer = null;
         }
@@ -147,7 +147,7 @@ namespace TestTask.Buildings
             {
                 if(CurrentTransfer.IsDone)
                 {
-                    CurrentTransfer.UpdateObjectPositionByPercent();
+                    CurrentTransfer.UpdateObjectPositionByPercent(CurrentTransfer.From.Items[CurrentTransfer.ItemIndex].ItemObject);
                     ApplyTransfer();
                     CurrentTransfer = null;
                 }
@@ -160,8 +160,9 @@ namespace TestTask.Buildings
 
         private void ApplyTransfer ()
         {
-            CurrentTransfer.Target.AddItemWithInstance(container[0].ItemId, CurrentTransfer.Object);
-            container.RemoveAt(0);
+            var itemData = CurrentTransfer.From.container[CurrentTransfer.ItemIndex];
+            CurrentTransfer.Target.AddItemWithInstance(itemData.ItemId, itemData.ItemObject);
+            CurrentTransfer.From.container.RemoveAt(CurrentTransfer.ItemIndex);
             RecalculateItemsPosition();
         }
         #endregion
@@ -170,19 +171,19 @@ namespace TestTask.Buildings
         {
             public Storage From;
             public Storage Target;
-            public GameObject Object;
+            public int ItemIndex;
             public float Delay;
 
             public TransferData(Storage from,
                 Storage target,
                 float delay,
-                GameObject gameObject)
+                int gameObjectIndex)
             {
                 TransferTick = Time.time;
                 From = from;
                 Target = target;
                 Delay = delay;
-                Object = gameObject;
+                ItemIndex = gameObjectIndex;
             }
 
             public float TransferTick { get; private set; }
@@ -196,7 +197,7 @@ namespace TestTask.Buildings
             public bool IsDone =>
                 TransferTime >= Delay;
 
-            public void UpdateObjectPositionByPercent ()
+            public void UpdateObjectPositionByPercent (GameObject Object)
             {
                 if(Object)
                     Object.transform.position = Vector3.Lerp(From.parentOfItems.position, Target.ItemsParent.position + Target.CalculateChildPosition(Target.Items.Length), Percent);

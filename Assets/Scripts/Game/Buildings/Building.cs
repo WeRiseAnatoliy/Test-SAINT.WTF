@@ -18,9 +18,9 @@ namespace TestTask.Buildings
         {
             items = ItemDatabase.GetDefault;
 
-            if (InputStorage)
+            if (InputStorage && InputStorage.InteractTrigger)
                 InputStorage.InteractTrigger.OnLost += OnInteractTriggerExit;
-            if (OutputStorage)
+            if (OutputStorage && OutputStorage.InteractTrigger)
                 OutputStorage.InteractTrigger.OnLost += OnInteractTriggerExit;
         }
 
@@ -59,24 +59,33 @@ namespace TestTask.Buildings
         {
             if (InputStorage.IsFull ||
                 playerStorage.Items.Length == 0 ||
-                playerStorage.ContainsAnyItem(InputItems) == false ||
                 playerStorage.CurrentTransfer != null)
                 return;
 
-            for (var x = lastGettedItemId; x < InputItems.Length; x++)
+            if (InputItems.Length > 0 && playerStorage.ContainsAnyItem(InputItems))
             {
-                if (playerStorage.ContainsItem(InputItems[x], out var arrayIdx))
+                for (var x = lastGettedItemId; x < InputItems.Length; x++)
                 {
-                    playerStorage.RequestTransfer(InputStorage,
-                       playerStorage.Items[arrayIdx].ItemObject,
-                       items[playerStorage.Items[arrayIdx].ItemId].UploadTime);
+                    if (playerStorage.ContainsItem(InputItems[x], out var arrayIdx))
+                    {
+                        playerStorage.RequestTransfer(InputStorage,
+                           arrayIdx,
+                           items[playerStorage.Items[arrayIdx].ItemId].UploadTime);
 
-                    lastGettedItemId++;
-                    if (lastGettedItemId >= InputItems.Length)
-                        lastGettedItemId = 0;
+                        lastGettedItemId++;
+                        if (lastGettedItemId >= InputItems.Length)
+                            lastGettedItemId = 0;
 
-                    break;
+                        break;
+                    }
                 }
+            }
+            else if(InputItems.Length == 0)
+            {
+                var arrayIdx = 0;
+                playerStorage.RequestTransfer(InputStorage,
+                           arrayIdx,
+                           items[playerStorage.Items[arrayIdx].ItemId].UploadTime);
             }
         }
 
@@ -89,7 +98,7 @@ namespace TestTask.Buildings
                 return;
 
             OutputStorage.RequestTransfer(playerStorage,
-                OutputStorage.ItemsParent.GetChild(itemIdx).gameObject,
+                itemIdx,
                 items[OutputStorage.Items[itemIdx].ItemId].UploadTime);
         }
     }

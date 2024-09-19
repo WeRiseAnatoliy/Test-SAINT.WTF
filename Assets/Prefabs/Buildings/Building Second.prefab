@@ -51,9 +51,10 @@ MonoBehaviour:
   OutputStorage: {fileID: 7582869796878934263}
   InputItems:
   - Item 01
+  - Item 01
   OutputItem: Item 02
   ProductionRate:
-    RealValue: 2
+    RealValue: 3
   CurrentState: 0
 --- !u!1 &1931381177145068144
 GameObject:
