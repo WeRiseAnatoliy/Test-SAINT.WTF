@@ -81,9 +81,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentOfItems: {fileID: 7488364266327268225}
-  itemsOffset: {x: -0.35, y: 0, z: 0.35}
-  itemsGridSize: {x: 5, y: 0, z: 5}
+  itemsOffset: {x: -0.35, y: 0, z: 0}
   center: 0
+  trigger: {fileID: 0}
   MaxItemsCount: 5
   IsOutput: 0
 --- !u!65 &3404608154487816629

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TestTask.Items;
+using TestTask.Triggers;
 using UnityEngine;
 
 using ReadOnlyAttribute = Sirenix.OdinInspector.ReadOnlyAttribute;
@@ -12,11 +13,10 @@ namespace TestTask.Buildings
     {
         [SerializeField, FoldoutGroup("Items")] Transform parentOfItems;
         [SerializeField, FoldoutGroup("Items")] Vector3 itemsOffset = new Vector3(0, 0.2f, 0);
-        [SerializeField, FoldoutGroup("Items")] Vector3Int itemsGridSize = new Vector3Int(5, 0, 5);
         [SerializeField, FoldoutGroup("Items")] bool center = true;
 
+        public ObjectTrigger InteractTrigger;
         public int MaxItemsCount = 5;
-        public bool IsOutput;
 
         public TransferData CurrentTransfer;
         public bool IsFull =>
@@ -27,9 +27,8 @@ namespace TestTask.Buildings
         private List<string> container = new List<string>();
 
         public string[] Items => container.ToArray();
+        public Transform ItemsParent => parentOfItems;
 
-        public System.Action<GameObject> OnPlayerEnter;
-        public System.Action<GameObject> OnPlayerExit;
 
         private void Start()
         {
@@ -41,6 +40,7 @@ namespace TestTask.Buildings
             HandleTransferData();
         }
 
+        #region Add, remove, contains
         public void AddItem(string itemId)
         {
             var prefab = itemDatabase[itemId].Prefab;
@@ -53,6 +53,31 @@ namespace TestTask.Buildings
             container.Add(itemId);
             item.transform.parent = parentOfItems;
             RecalculateItemsPosition();
+        }
+
+        public bool ContainsAnyItem(params string[] itemIds) =>
+            ContainsItems(true, itemIds);
+
+        public bool ContainsAllItems(params string[] itemsIds) =>
+            ContainsItems(false, itemsIds);
+
+        public bool ContainsItems (bool anyFromList, params string[] itemIds)
+        {
+            var used = new List<int>();
+            for(var x = 0; x < itemIds.Length; x++)
+            {
+                if (ContainsItem(itemIds[x], out var idx, used.ToArray()))
+                {
+                    used.Add(idx);
+                    if (anyFromList)
+                        return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return used.Count == itemIds.Length;
         }
 
         public bool ContainsItem(string itemId, params int[] exclude) =>
@@ -79,6 +104,7 @@ namespace TestTask.Buildings
         {
             container.RemoveAt(idx);
         }
+        #endregion
 
         public void RecalculateItemsPosition ()
         {
@@ -91,14 +117,11 @@ namespace TestTask.Buildings
 
         public Vector3 CalculateChildPosition(int index)
         {
-            var x = index % itemsGridSize.x;
-            var z = index / itemsGridSize.z;
-
-            var position = new Vector3(x * itemsOffset.x, itemsOffset.y, z * itemsOffset.z);
+            var position = index * itemsOffset;
 
             if (center)
             {
-                var totalSize = new Vector3((itemsGridSize.x - 1) * itemsOffset.x, 0, (itemsGridSize.z - 1) * itemsOffset.z);
+                var totalSize = parentOfItems.childCount * itemsOffset;
                 position -= totalSize * 0.5f;
             }
 
@@ -139,28 +162,10 @@ namespace TestTask.Buildings
 
         private void ApplyTransfer ()
         {
-            CurrentTransfer.Target.AddItem(container[0]);
+            CurrentTransfer.Target.AddItemWithInstance(container[0], CurrentTransfer.Object);
             container.RemoveAt(0);
         }
         #endregion
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if(other.CompareTag("Player"))
-            {
-                if(IsOutput && container.Count > 0)
-                {
-                    RequestTransfer(other.GetComponent<Storage>(),
-                        parentOfItems.GetChild(0).gameObject, 
-                        itemDatabase[container[0]].UploadTime);
-                }
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            
-        }
 
         public class TransferData
         {

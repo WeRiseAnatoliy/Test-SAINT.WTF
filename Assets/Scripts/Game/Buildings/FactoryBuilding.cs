@@ -6,16 +6,16 @@ namespace TestTask.Buildings
 {
     public class FactoryBuilding : Building
     {
-        [FoldoutGroup("Items"), ValueDropdown(nameof(items))] public string[] InputItems;
-        [FoldoutGroup("Items"), ValueDropdown(nameof(items))] public string OutputItem;
 
         [FoldoutGroup("Items")] public ValueWithModifers ProductionRate = new ValueWithModifers(2);
 
         [FoldoutGroup("Debug"), ShowInInspector, ReadOnly] public Dictionary<FactoryStateType, FactoryState> States;
         [FoldoutGroup("Debug"), ShowInInspector, ReadOnly] public FactoryStateType CurrentState;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+
             States = new()
             {
                 { FactoryStateType.WaitingResources, new WaitingResourcesState(this) },
@@ -43,8 +43,10 @@ namespace TestTask.Buildings
             States[CurrentState].EnterState();
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+
             if(States != null && States.Count > 0)
                 States[CurrentState].Update();
         }
