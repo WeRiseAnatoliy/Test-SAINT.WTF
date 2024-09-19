@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 533cccc1984a24f4a9cf2582433013dc, type: 3}
-  m_Name: Item Database
+  m_Script: {fileID: 11500000, guid: 9e804913112207f439a64560a2198d2c, type: 3}
+  m_Name: Item B
   m_EditorClassIdentifier: 
-  Items:
-  - {fileID: 11400000, guid: 49cb9dddb3a640c49971a5bbe6f29023, type: 2}
-  autoFindOnValidate: 1
+  ID: Item 02
+  Title: 
+  Prefab: {fileID: 3756230278306883361, guid: affb0324acea62e4a9bb5b27dc4e74f0, type: 3}
+  UploadTime: 1.25

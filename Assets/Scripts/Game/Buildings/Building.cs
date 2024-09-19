@@ -6,8 +6,8 @@ namespace TestTask.Buildings
 {
     public class Building : MonoBehaviour
     {
-        [SerializeField, FoldoutGroup("Storages")] public Storage InputStrorage;
-        [SerializeField, FoldoutGroup("Storages")] public Storage OutputStrorage;
+        [SerializeField, FoldoutGroup("Storages")] public Storage InputStorage;
+        [SerializeField, FoldoutGroup("Storages")] public Storage OutputStorage;
 
         [FoldoutGroup("Items"), ValueDropdown(nameof(items))] public string[] InputItems;
         [FoldoutGroup("Items"), ValueDropdown(nameof(items))] public string OutputItem;
@@ -26,19 +26,19 @@ namespace TestTask.Buildings
 
         private void HandlePlayerTrigger()
         {
-            if(InputStrorage &&
-                InputStrorage.CurrentTransfer == null &&
-                InputStrorage.InteractTrigger.Memory.Count > 0)
+            if(InputStorage &&
+                InputStorage.CurrentTransfer == null &&
+                InputStorage.InteractTrigger.Memory.Count > 0)
             {
-                var playerInv = InputStrorage.InteractTrigger.Memory[0].GetComponent<Storage>();
+                var playerInv = InputStorage.InteractTrigger.Memory[0].GetComponent<Storage>();
                 HandleInputStorage(playerInv);
             }
 
-            if (OutputStrorage &&
-                OutputStrorage.CurrentTransfer == null &&
-                OutputStrorage.InteractTrigger.Memory.Count > 0)
+            if (OutputStorage &&
+                OutputStorage.CurrentTransfer == null &&
+                OutputStorage.InteractTrigger.Memory.Count > 0)
             {
-                var playerInv = OutputStrorage.InteractTrigger.Memory[0].GetComponent<Storage>();
+                var playerInv = OutputStorage.InteractTrigger.Memory[0].GetComponent<Storage>();
                 HandleOutputStorage(playerInv);
             }
         }
@@ -46,37 +46,40 @@ namespace TestTask.Buildings
         private int lastGettedItemId;
         protected virtual void HandleInputStorage (Storage playerStorage)
         {
-            if (InputStrorage.IsFull ||
+            if (InputStorage.IsFull ||
                 playerStorage.Items.Length == 0 ||
-                playerStorage.ContainsAnyItem(InputItems) == false)
+                playerStorage.ContainsAnyItem(InputItems) == false ||
+                playerStorage.CurrentTransfer != null)
                 return;
 
             for (var x = lastGettedItemId; x < InputItems.Length; x++)
             {
                 if (playerStorage.ContainsItem(InputItems[x], out var arrayIdx))
                 {
-                    playerStorage.RequestTransfer(InputStrorage,
+                    playerStorage.RequestTransfer(InputStorage,
                         playerStorage.ItemsParent.GetChild(arrayIdx).gameObject,
                         items[playerStorage.Items[arrayIdx]].UploadTime);
 
                     lastGettedItemId++;
                     if (lastGettedItemId >= InputItems.Length)
                         lastGettedItemId = 0;
+
+                    break;
                 }
             }
         }
 
         protected virtual void HandleOutputStorage(Storage playerStorage)
         {
-            var itemIdx = OutputStrorage.Items.Length - 1;
+            var itemIdx = OutputStorage.Items.Length - 1;
 
             if (playerStorage.IsFull ||
-                OutputStrorage.Items.Length == 0)
+                OutputStorage.Items.Length == 0)
                 return;
 
-            OutputStrorage.RequestTransfer(playerStorage,
-                OutputStrorage.ItemsParent.GetChild(itemIdx).gameObject,
-                items[OutputStrorage.Items[itemIdx]].UploadTime);
+            OutputStorage.RequestTransfer(playerStorage,
+                OutputStorage.ItemsParent.GetChild(itemIdx).gameObject,
+                items[OutputStorage.Items[itemIdx]].UploadTime);
         }
     }
 }

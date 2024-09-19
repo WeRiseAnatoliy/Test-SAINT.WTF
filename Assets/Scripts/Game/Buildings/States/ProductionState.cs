@@ -19,7 +19,7 @@ namespace TestTask.Buildings
 
         public override void EnterState()
         {
-            if (Factory.OutputStrorage.IsFull)
+            if (Factory.OutputStorage.IsFull)
             {
                 Factory.SetState(FactoryStateType.OutputStorageFull);
             }
@@ -34,8 +34,8 @@ namespace TestTask.Buildings
         {
             foreach (var item in Factory.InputItems)
             {
-                Factory.InputStrorage.ContainsItem(item, out var arrayIdx);
-                Factory.InputStrorage.RemoveItem(arrayIdx);
+                Factory.InputStorage.ContainsItem(item, out var arrayIdx);
+                Factory.InputStorage.RemoveItem(arrayIdx);
             }
         }
 
@@ -43,7 +43,7 @@ namespace TestTask.Buildings
         {
             base.Update();
 
-            if (Factory.OutputStrorage.IsFull == false &&
+            if (Factory.OutputStorage.IsFull == false &&
                 timeFromLastProd >= Factory.ProductionRate.ModifedValue)
             {
                 Factory.SetState(FactoryStateType.ItemProduce);

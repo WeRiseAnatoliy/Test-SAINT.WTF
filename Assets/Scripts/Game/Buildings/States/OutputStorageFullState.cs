@@ -21,7 +21,7 @@
         {
             base.Update();
 
-            if (Factory.OutputStrorage.IsFull == false)
+            if (Factory.OutputStorage.IsFull == false)
                 Factory.SetState(FactoryStateType.WaitingResources);
         }
     }

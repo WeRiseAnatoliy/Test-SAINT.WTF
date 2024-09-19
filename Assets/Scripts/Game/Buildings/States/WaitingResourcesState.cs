@@ -31,13 +31,13 @@ namespace TestTask.Buildings
 
         private bool InputItemsConidition()
         {
-            if (Factory.InputStrorage == null || Factory.InputItems.Length == 0)
+            if (Factory.InputStorage == null || Factory.InputItems.Length == 0)
                 return true;
 
             var usedItemsIdx = new List<int>();
             for (var x = 0; x < Factory.InputItems.Length; x++)
             {
-                if (Factory.InputStrorage.ContainsItem(Factory.InputItems[x], out var storageArrayIdx, usedItemsIdx.ToArray()))
+                if (Factory.InputStorage.ContainsItem(Factory.InputItems[x], out var storageArrayIdx, usedItemsIdx.ToArray()))
                 {
                     usedItemsIdx.Add(storageArrayIdx);
                 }

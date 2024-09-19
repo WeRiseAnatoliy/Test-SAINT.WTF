@@ -9,9 +9,9 @@
 
         public override void EnterState()
         {
-            Factory.OutputStrorage.AddItem(Factory.OutputItem);
+            Factory.OutputStorage.AddItem(Factory.OutputItem);
 
-            if (Factory.OutputStrorage.IsFull == false)
+            if (Factory.OutputStorage.IsFull == false)
                 Factory.SetState(FactoryStateType.WaitingResources);
             else
                 Factory.SetState(FactoryStateType.OutputStorageFull);

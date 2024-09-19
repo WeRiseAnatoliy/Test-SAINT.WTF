@@ -150,12 +150,13 @@ namespace TestTask.Buildings
             {
                 if(CurrentTransfer.IsDone)
                 {
+                    CurrentTransfer.UpdateObjectPositionByPercent();
                     ApplyTransfer();
                     CurrentTransfer = null;
                 }
                 else
                 {
-                    CurrentTransfer.UpdateObjectPositionByPercent();
+                    //CurrentTransfer.UpdateObjectPositionByPercent();
                 }
             }
         }
@@ -200,7 +201,7 @@ namespace TestTask.Buildings
             public void UpdateObjectPositionByPercent ()
             {
                 if(Object)
-                    Object.transform.position = Vector3.Lerp(From.parentOfItems.position, Target.parentOfItems.position, Percent);
+                    Object.transform.position = Vector3.Lerp(From.parentOfItems.position, Target.ItemsParent.position + Target.CalculateChildPosition(Target.Items.Length), Percent);
             }
         }
     }

@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 7266852596588016659}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.03, y: 0, z: 0.14}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2636e58e3b74a6948a484b112c55fc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputStrorage: {fileID: 0}
-  OutputStrorage: {fileID: 1875979646273634569}
+  InputStorage: {fileID: 0}
+  OutputStorage: {fileID: 1875979646273634569}
   InputItems: []
   OutputItem: Item 01
   ProductionRate:
@@ -179,6 +179,10 @@ PrefabInstance:
       propertyPath: IsOutput
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4680759284738025474, guid: 069144d243460f64c9e4f4cb033b12cf, type: 3}
+      propertyPath: InteractTrigger
+      value: 
+      objectReference: {fileID: 1443739576687218333}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
