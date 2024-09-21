@@ -27,6 +27,8 @@ namespace TestTask.Buildings
             {
                 lastProductionTime = Time.time;
                 CollectResources();
+
+                Factory.infoPanel.Text.text = $"Production...";
             }
         }
 
@@ -46,10 +48,13 @@ namespace TestTask.Buildings
         {
             base.Update();
 
-            if (Factory.OutputStorage.IsFull == false &&
-                timeFromLastProd >= Factory.ProductionRate.ModifedValue)
+            if(Factory.OutputStorage.IsFull == false)
             {
-                Factory.SetState(FactoryStateType.ItemProduce);
+                Factory.infoPanel.SetProgress(ProductionPercent);
+                if (timeFromLastProd >= Factory.ProductionRate.ModifedValue)
+                {
+                    Factory.SetState(FactoryStateType.ItemProduce);
+                }
             }
         }
 

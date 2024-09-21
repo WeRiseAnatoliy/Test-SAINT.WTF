@@ -1,3 +1,4 @@
+using TestTask.Game.UI;
 using UnityEngine;
 
 namespace TestTask.Characters
@@ -10,9 +11,10 @@ namespace TestTask.Characters
         public float SpeedMove = 5f;
         public float RotationDegressDelta = 250f;
 
-        private void Start()
+        private void Awake()
         {
             controller = GetComponent<CharacterController>();
+            UI.UIService.CreateStatic<SimpleGameScreen>();
         }
 
         private Vector2 moveAxis =>

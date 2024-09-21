@@ -9,7 +9,7 @@
 
         public override void EnterState()
         {
-
+            Factory.infoPanel.Text.text = "Output storage is full";
         }
 
         public override void ExitState()

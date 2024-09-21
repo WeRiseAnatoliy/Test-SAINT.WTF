@@ -1,6 +1,8 @@
 ﻿using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using TestTask.Common;
+using TestTask.Game.UI;
+using TestTask.UI;
 
 namespace TestTask.Buildings
 {
@@ -12,8 +14,12 @@ namespace TestTask.Buildings
         [FoldoutGroup("Debug"), ShowInInspector, ReadOnly] public Dictionary<FactoryStateType, FactoryState> States;
         [FoldoutGroup("Debug"), ShowInInspector, ReadOnly] public FactoryStateType CurrentState;
 
+        internal ObjectInfoPanel infoPanel;
+
         protected override void Start()
         {
+            infoPanel = UIService.Instance.GetComponentInChildren<SimpleGameScreen>().CreatePanel(this);
+
             base.Start();
 
             States = new()

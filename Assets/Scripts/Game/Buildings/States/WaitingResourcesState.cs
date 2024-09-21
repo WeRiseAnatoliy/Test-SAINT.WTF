@@ -27,6 +27,10 @@ namespace TestTask.Buildings
             {
                 Factory.SetState(FactoryStateType.Production);
             }
+            else
+            {
+                Factory.infoPanel.Text.text = $"Need resources: {string.Join(", ", Factory.InputItems)}";
+            }
         }
 
         private bool InputItemsConidition()
