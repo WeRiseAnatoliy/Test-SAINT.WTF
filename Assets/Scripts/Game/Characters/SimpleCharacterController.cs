@@ -11,13 +11,17 @@ namespace TestTask.Characters
         public float SpeedMove = 5f;
         public float RotationDegressDelta = 250f;
 
+        private SimpleGameScreen gameScreen;
+
         private void Awake()
         {
             controller = GetComponent<CharacterController>();
-            UI.UIService.CreateStatic<SimpleGameScreen>();
+            gameScreen = UI.UIService.CreateStatic<SimpleGameScreen>();
         }
 
-        private Vector2 moveAxis =>
+        private Vector2 moveAxis => 
+            gameScreen && gameScreen.moveJoystick.Direction.magnitude > 0 ? 
+            gameScreen.moveJoystick.Direction :
             new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         private Vector3 moveDirection =>

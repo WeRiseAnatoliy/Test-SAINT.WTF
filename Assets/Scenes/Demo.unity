@@ -830,6 +830,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building Third
       objectReference: {fileID: 0}
+    - target: {fileID: 8876047420407823081, guid: dcccaa5aefa5978478fe208b5fc7961c, type: 3}
+      propertyPath: m_Color.g
+      value: 0.52156866
+      objectReference: {fileID: 0}
+    - target: {fileID: 8876047420407823081, guid: dcccaa5aefa5978478fe208b5fc7961c, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -887,6 +895,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building First
       objectReference: {fileID: 0}
+    - target: {fileID: 8765979064645765647, guid: 6390cb2915b95724baee61f0dbdc48b3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.52156866
+      objectReference: {fileID: 0}
+    - target: {fileID: 8765979064645765647, guid: 6390cb2915b95724baee61f0dbdc48b3, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -903,6 +919,18 @@ PrefabInstance:
     - target: {fileID: 204318618266598014, guid: b762a1e82375f78499c6ae6d52b2b3de, type: 3}
       propertyPath: m_Name
       value: Building Second
+      objectReference: {fileID: 0}
+    - target: {fileID: 762253929017371633, guid: b762a1e82375f78499c6ae6d52b2b3de, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 762253929017371633, guid: b762a1e82375f78499c6ae6d52b2b3de, type: 3}
+      propertyPath: m_Color.g
+      value: 0.52242804
+      objectReference: {fileID: 0}
+    - target: {fileID: 762253929017371633, guid: b762a1e82375f78499c6ae6d52b2b3de, type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2575229347920401591, guid: b762a1e82375f78499c6ae6d52b2b3de, type: 3}
       propertyPath: m_LocalPosition.x

@@ -7,6 +7,8 @@ namespace TestTask.Game.UI
     [ResourcePath("SimpleGameScreen")]
     public class SimpleGameScreen : UIElement
     {
+        public Joystick moveJoystick;
+
         [SerializeField] ObjectInfoPanel infoPanelPrefab;
 
         public ObjectInfoPanel CreatePanel (FactoryBuilding target)
